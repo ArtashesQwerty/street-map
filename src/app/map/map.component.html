@@ -1,0 +1,10 @@
+<div fxLayout="column">
+
+    <mat-select style="margin: 80px;width: 150px;" placeholder="{{currentCity}}">
+        <mat-option *ngFor="let city of cities" (click)="onGetMapByCity(city.title)">
+            {{city.title}}
+        </mat-option>
+    </mat-select>
+
+    <div id="map"></div>
+</div>
