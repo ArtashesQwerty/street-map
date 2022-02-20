@@ -22,23 +22,25 @@ export class MapComponent implements OnInit {
   ]
 
   map: any;
-  latLong: any = [42.698334, 23.319941]
+  latLong: any = [42.698334, 23.319941];
   currentCity: string = 'Choose a City';
+  currentMarker: any;
 
   constructor(private data: MapService) { }
 
   ngOnInit() {
+    this.map = L.map('map').setView(this.latLong, 7);
     this.getMap('Sofia');
   }
 
   getMap(currentCity: string) {
-    this.map = L.map('map').setView(this.latLong, 13);
+    this.map.setView(this.latLong);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }, { icon: Icon }).addTo(this.map);
 
-    L.marker(this.latLong).addTo(this.map)
+    this.currentMarker = L.marker(this.latLong).addTo(this.map)
       .bindPopup(currentCity)
       .openPopup();
   }
@@ -50,8 +52,9 @@ export class MapComponent implements OnInit {
         console.log('data from nominatim', data[0].lat, data[0].lon)
 
         this.currentCity = cityName;
-        this.map.remove();
         this.latLong = [data[0].lat, data[0].lon];
+        this.map.removeLayer(this.currentMarker);
+
         this.getMap(this.currentCity);
       },
       error => {
